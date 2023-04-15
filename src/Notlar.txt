@@ -1,0 +1,161 @@
+
+
+<>     
+<div>
+    1- JS ile yazdığımız tarih ile ilgil kodu doğrudan ekrana basamıyoruz bunun için aşağıdaki gibi 
+       yazmalıyız.
+
+        function ExpenseItem() {
+          const expenseDate =new Date(2023,4,8);   // AAAA
+          return (
+          <div className="expense-item">
+            <div>{expenseDate.toISOString()}</div>   // AAAA
+            </div>
+          )};
+
+
+
+    2- Rakamlar
+                rakamları props olarak gönderirken {} içerisinde yazmak gerekmektedir.
+
+                  <ExpenseItem price={12} />    // Doğru kullanım
+                  <ExpenseItem price= 12 />     // Yanlış kullanım
+
+ 
+    3- Tarih: 
+                  const carDate=[{
+                      month: props.date.toLocaleString('en-US',{month:'long'}) ,
+                      day: props.date.toLocaleString('en-US',{day:'2-digit'}) ,
+                      year: props.date.getFullYear()
+                  }]
+
+
+    41 - JSX -React - ReactDOM
+    
+        /**
+            - JSX syntax olmadan önceki kullanılan react kod yapısı aşağıdaki gibiydi.
+                1- import React from "react";
+                2- aşağıdaki return sonrası kod bloğu yazılmaktaydı. Ancak artık JSX ile normal html kodu yazar gibi yazmaktayız.
+                3- Dikkat: İşte bu yüzden JSX sonrasında 1. maddedeki import alanına ihtiyaç kalmadı.
+
+
+                  return React.createElement('div',{},
+                  React.createElement('h2',{},'Let\'s get started!'),
+                  React.createElement(Expense,{items:expenses})
+                  );
+        
+        */
+
+        /*
+              Aynı seviyede bulunan dosyalara erişmek için ./DosyaAdi  kullanılır.
+        */
+
+
+    43 - Bütün fonksiyonları 'Arrow Function' a çevirdi.   (SEN DE YAP)
+
+    46. Listening to Events & Working with Event Handlers
+
+
+    48 - useState useage;
+
+          /*
+              Dikkat bir useState değişkeni const olduğu için bu şekilde bir değer ataması yapamazsın. setTitle() fonksiyonu ile değer
+              ataması yapılmalıdır. Çünkü bu fonksiyon vasıtasıyla içeride değer kopyalama yöntemi uygulanmaktadır. Yani immutable
+              işlemine uygun işlemler yapılmaktadır.
+          
+                const [title, setTitle] = useState(props.title);
+                title = "Welcome to here"; 
+          */  
+
+      - Array Destructuring : 
+        const [title, setTitle] = useState(props.title);
+
+      - setTitle() fonksiyonu her çağrıldığığnda arkaplanda React bu fonksiyon ile birlikte ilgili componenti render etmektedir.
+Dikkat: useEffect()..[]  seçeneği çalıştırıldığında sayfa ilk yüklerken bu fonksiyon çalışacaktır. Ancak sonrasında useState
+        değişkeninin değeri değiştiğinde sayfa yenilenecektir ancak useEffect tekrar çalışmayacaktır.
+
+
+
+      52 - javajscipt -  vanillia 
+          Aslında aşağıda  // AAAA şeklinde olan yapıların hepsi aynı işlevi görmektedir. Ancak en son kısımda yazılan kod aslında 
+          bizim yazdığımız diğer kodların temelini oluşturmaktadır. javajscipt vanillia
+
+
+            * <input type="number" onChange={(e)=>{setAmount(e.target.value)}}  // AAAA
+
+            * const titleChangeHandler=(event)=>{     // AAAA
+              setAmount(event.target.value)
+              }
+
+            * document.getElementById('idInput').addEventListener('click',(event)=>{event.target.value});   // AAAA
+
+
+      53 - Default olarak input etiketinin değeri boş string değerdir.  O yüzden aşağıdaki state' leri string olarak başlattık
+              const [enteredAmount, setEnteredAmount] = useState("");
+              const [enteredTitle, setEnteredTitle] = useState("");
+              const [enteredDate, setEnteredDate] = useState("");
+
+
+      54 - Yukarıdaki gibi state' leri ayrı ayrı yazacağımıza değişkenleri bir obje içerisinde tek bir state' ye geçebiliriz.
+              const[userInput, setUserInput]= useState({
+                enteredTitle:'',
+                enteredAmount:'',
+                setEnteredDate=''
+              });
+
+         Önemli: Eğer önceki değerleri kaybetmdeden sadece obje içerisinden bir key-value değerini güncellemek set etmek istersen;
+
+              setUserInput({
+                ...userInput, enteredAmount: event.target.value,
+              });
+
+
+      55 - Yukarıdaki kullanım React arkaplanda gelen güncellemeleri anlık yapmayıp bir sıraya programa dahil ettiği için bu kullanım
+           ile anlık güncelleme olmayacağı için problemler meydana gelebilir. Bunun yerine aşağıdaki kullanım ile anlık state
+           güncellemesi yapılabilecektir. Çünkü burada return ile en güncel state geri gönderilmektedir.
+           Yani burada bir önceki kullanıma bağımlı olduğumuz durumlarda kullanılmaktadır. Sıklıkla bu bağımlılıktan bahsedilebilri.
+           
+              setUserInput((prevState,event)=>{
+                return {...prevState,enteredTitle:event.target.value}
+              })
+
+
+          - Kısacası modern ve best practice olarak bir state'yi anlık güncelleyip son değerini almak için 
+              
+              setCounter(prevState=>prevState+1);
+
+
+NOT: MAX' ın prebsibi multi-state yani değiken başına state tanımlamak.
+
+
+      64- Spread Operatör: 
+          spread operatörü aşağıdaki durumlarda farklı işlemler yapacaktır.
+            1-     Aşağıdaki gibi kullanıldığında ...prevState alanı ile mevcut nesnemin bir copyası oluşturulur ve 
+                   virgülden sonraki kısım ile veriyi prevState nesnesine ekleyecek. (Bu kullanımda güncelleme işlemi yapılabir.)
+            setExpenses((prevState)=>{
+                               return [
+                                        ...prevState,  {
+                                                          id: expense.id,
+                                                          title: expense.enteredTitle,
+                                                          amount: expense.enteredAmount,
+                                                          date: expense.enteredDate,
+                                                       },
+                                    ];
+            });
+
+      
+            2- return [expense, ...prevState]; 
+            
+            // Bu şekilde kullanımda ...prevState verisi içindeki değerler kopyalanacak ve expense verisi ile birlikte yeni bir
+            Array return edilecektr.
+
+
+
+
+
+      
+             
+
+
+
+ </div>
